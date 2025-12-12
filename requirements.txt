@@ -1,0 +1,5 @@
+Flask==3.0.3
+Flask-Session==0.8.0
+spotipy==2.24.0
+pytube==15.0.0
+python-dotenv==1.0.1
