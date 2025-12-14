@@ -1,232 +1,433 @@
 <!doctype html>
 <html>
+
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Spotify → YouTube</title>
-  <style>
-    :root {
-      /* GitHub Dark Palette */
-      --bg:#0d1117; --fg:#c9d1d9; --muted:#8b949e; --ok:#3fb950; --bad:#f85149;
-      --brand:#58a6ff; --card:#161b22; --bd:#30363d;
-    }
-    * { box-sizing: border-box; }
-    body { font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background: var(--bg); color: var(--fg); margin: 0; }
-    header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--bd); position: sticky; top: 0; background: var(--bg); }
-    main { padding: 1.25rem; max-width: 980px; margin: 0 auto; }
-    .card { background: var(--card); border: 1px solid var(--bd); border-radius: 14px; padding: 1rem; margin-bottom: 1rem; }
-    .row { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); }
-    label { display:block; font-weight:600; margin:.25rem 0; }
-    input[type=text] { width: 100%; padding: .7rem .8rem; border: 1px solid var(--bd); border-radius: 10px; background: #0d1117; color: var(--fg); }
-    input::placeholder { color: var(--muted); }
-    button, .btn { display: inline-flex; align-items: center; gap: .5rem; padding: .7rem 1rem; border-radius: 10px; border: 1px solid var(--bd); background: #21262d; color: var(--fg); cursor: pointer; text-decoration: none; }
-    .btn.alt { background: #1f6feb; border-color: #1f6feb; color: #fff; }
-    button:hover, .btn:hover { filter: brightness(1.1); }
-    .muted { color: var(--muted); }
-    .ok { color: var(--ok); font-weight:700; }
-    .bad { color: var(--bad); font-weight:700; }
-    .progress { height: 16px; background: #21262d; border-radius: 999px; overflow: hidden; border: 1px solid var(--bd); }
-    .bar { height: 100%; width: 0%; background: var(--brand); transition: width .3s ease; }
-    code { background: #0d1117; border: 1px solid var(--bd); padding: 2px 6px; border-radius: 6px; color: var(--fg); }
-    ul { margin:.5rem 0 .25rem 1.25rem; }
-    details { margin-top:.5rem; }
-    a { color: var(--brand); }
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Spotify → YouTube</title>
+	<style>
+		:root {
+			/* GitHub Dark Palette */
+			--bg: #0d1117;
+			--fg: #c9d1d9;
+			--muted: #8b949e;
+			--ok: #3fb950;
+			--bad: #f85149;
+			--brand: #58a6ff;
+			--card: #161b22;
+			--bd: #30363d;
+		}
 
-    .mini { font-size: .9rem; }
-    .pl-wrap { margin-top: .25rem; }
-    .throb { display:inline-block; width: .8rem; height: .8rem; border-radius:50%; background: var(--muted); margin-right: .35rem; animation: throb 1s infinite alternate; vertical-align: middle; }
-    @keyframes throb { from { opacity: .45; } to { opacity: 1; } }
-  </style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+			background: var(--bg);
+			color: var(--fg);
+			margin: 0;
+		}
+
+		header {
+			padding: 1rem 1.25rem;
+			border-bottom: 1px solid var(--bd);
+			position: sticky;
+			top: 0;
+			background: var(--bg);
+		}
+
+		main {
+			padding: 1.25rem;
+			max-width: 980px;
+			margin: 0 auto;
+		}
+
+		.card {
+			background: var(--card);
+			border: 1px solid var(--bd);
+			border-radius: 14px;
+			padding: 1rem;
+			margin-bottom: 1rem;
+		}
+
+		.row {
+			display: grid;
+			gap: 1rem;
+			grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		}
+
+		label {
+			display: block;
+			font-weight: 600;
+			margin: .25rem 0;
+		}
+
+		input[type=text] {
+			width: 100%;
+			padding: .7rem .8rem;
+			border: 1px solid var(--bd);
+			border-radius: 10px;
+			background: #0d1117;
+			color: var(--fg);
+		}
+
+		input::placeholder {
+			color: var(--muted);
+		}
+
+		button,
+		.btn {
+			display: inline-flex;
+			align-items: center;
+			gap: .5rem;
+			padding: .7rem 1rem;
+			border-radius: 10px;
+			border: 1px solid var(--bd);
+			background: #21262d;
+			color: var(--fg);
+			cursor: pointer;
+			text-decoration: none;
+		}
+
+		.btn.alt {
+			background: #1f6feb;
+			border-color: #1f6feb;
+			color: #fff;
+		}
+
+		button:hover,
+		.btn:hover {
+			filter: brightness(1.1);
+		}
+
+		.muted {
+			color: var(--muted);
+		}
+
+		.ok {
+			color: var(--ok);
+			font-weight: 700;
+		}
+
+		.bad {
+			color: var(--bad);
+			font-weight: 700;
+		}
+
+		.progress {
+			height: 16px;
+			background: #21262d;
+			border-radius: 999px;
+			overflow: hidden;
+			border: 1px solid var(--bd);
+		}
+
+		.bar {
+			height: 100%;
+			width: 0%;
+			background: var(--brand);
+			transition: width .3s ease;
+		}
+
+		code {
+			background: #0d1117;
+			border: 1px solid var(--bd);
+			padding: 2px 6px;
+			border-radius: 6px;
+			color: var(--fg);
+		}
+
+		ul {
+			margin: .5rem 0 .25rem 1.25rem;
+		}
+
+		details {
+			margin-top: .5rem;
+		}
+
+		a {
+			color: var(--brand);
+		}
+
+		.mini {
+			font-size: .9rem;
+		}
+
+		.pl-wrap {
+			margin-top: .25rem;
+		}
+
+		.throb {
+			display: inline-block;
+			width: .8rem;
+			height: .8rem;
+			border-radius: 50%;
+			background: var(--muted);
+			margin-right: .35rem;
+			animation: throb 1s infinite alternate;
+			vertical-align: middle;
+		}
+
+		@keyframes throb {
+			from {
+				opacity: .45;
+			}
+
+			to {
+				opacity: 1;
+			}
+		}
+
+		.switch {
+			position: relative;
+			display: inline-block;
+			width: 46px;
+			height: 26px;
+			vertical-align: middle;
+		}
+
+		.switch input {
+			display: none;
+		}
+
+		.slider {
+			position: absolute;
+			cursor: pointer;
+			inset: 0;
+			background: #30363d;
+			border: 1px solid var(--bd);
+			transition: .2s;
+			border-radius: 999px;
+		}
+
+		.slider:before {
+			content: "";
+			position: absolute;
+			height: 20px;
+			width: 20px;
+			left: 3px;
+			top: 2px;
+			background: var(--fg);
+			transition: .2s;
+			border-radius: 50%;
+		}
+
+		.switch input:checked+.slider {
+			background: #1f6feb;
+			border-color: #1f6feb;
+		}
+
+		.switch input:checked+.slider:before {
+			transform: translateX(20px);
+		}
+	</style>
+
 </head>
+
 <body>
-  <header>
-    <strong>Spotify → YouTube</strong>
-  </header>
-  <main>
-    <div class="row">
-      <div class="card">
-        <h3>1) Spotify verbinden</h3>
-        <p>Spotify:
-          {% if sp_ok %}<span class='ok'>verbunden</span>{% else %}<span class='bad'>nicht verbunden</span>{% endif %}.
-        </p>
-        {% if not sp_ok %}
-          <a class="btn alt" href="/spotify/login">Mit Spotify verbinden</a>
-        {% else %}
-          <span class="muted">Alles bereit ✅</span>
-        {% endif %}
-        <p class="muted mini">Redirect-URL in Spotify:
-          <code>{{ base_url }}{{ spotify_redirect_path }}</code>
-        </p>
-      </div>
+	<header>
+		<strong>Spotify → YouTube</strong>
+	</header>
+	<main>
+		<div class="row">
+			<div class="card">
+				<h3>1) Spotify verbinden</h3>
+				<p>Spotify:
+					{% if sp_ok %}<span class='ok'>verbunden</span>{% else %}<span class='bad'>nicht verbunden</span>{%
+					endif %}.
+				</p>
+				{% if not sp_ok %}
+				<a class="btn alt" href="/spotify/login">Mit Spotify verbinden</a>
+				{% else %}
+				<span class="muted">Alles bereit ✅</span>
+				{% endif %}
+				<p class="muted mini">Redirect-URL in Spotify:
+					<code>{{ base_url }}{{ spotify_redirect_path }}</code>
+				</p>
+			</div>
 
-      <div class="card">
-        <h3>2) Konvertieren</h3>
-        <form id="form">
-          <label>Spotify Playlist URL/ID</label>
-          <input type="text" name="spotify_playlist" placeholder="https://open.spotify.com/playlist/..." required/>
-          <label>Such-Suffix (optional)</label>
-          <input type="text" name="search_suffix" value="Music Video" placeholder="Music Video"/>
-          <div style="margin-top: .75rem;">
-            <button id="startBtn" type="submit">Starten</button>
-          </div>
-          <p class="muted mini">
-            Es wird je Track das <b>erste</b> YouTube-Ergebnis für „{Song} - {Artist} {Suffix}“ genommen.
-          </p>
-        </form>
-      </div>
-    </div>
+			<div class="card">
+				<h3>2) Konvertieren</h3>
+				<form id="form">
+					<label>Spotify Playlist URL/ID</label>
+					<input type="text" name="spotify_playlist" placeholder="https://open.spotify.com/playlist/..."
+						required />
+					<label style="margin-top:.5rem;">Shuffle (Spotify-Reihenfolge mischen)</label>
+					<div style="display:flex; align-items:center; gap:.6rem;">
+						<label class="switch">
+							<input type="checkbox" name="shuffle" value="1">
+							<span class="slider"></span>
+						</label>
+						<span class="muted mini">Wenn an: Tracks werden vor der YouTube-Suche gemischt</span>
+					</div>
+					<label>Such-Suffix (optional)</label>
+					<input type="text" name="search_suffix" value="Official Music Video HD"
+						placeholder="Official Music Video HD" />
+					<div style="margin-top: .75rem;">
+						<button id="startBtn" type="submit">Starten</button>
+					</div>
+					<p class="muted mini">
+						Es wird je Track das <b>erste</b> YouTube-Ergebnis für „{Song} - {Artist} {Suffix}“ genommen.
+					</p>
+				</form>
+			</div>
+		</div>
 
-    <div id="progressCard" class="card" style="display:none;">
-      <h3>Fortschritt</h3>
-      <div class="progress"><div id="bar" class="bar"></div></div>
-      <p id="pText" class="muted" style="margin:.5rem 0 0;">Initialisiere …</p>
-      <p id="pCurr" style="margin:.2rem 0 0;"></p>
-    </div>
+		<div id="progressCard" class="card" style="display:none;">
+			<h3>Fortschritt</h3>
+			<div class="progress">
+				<div id="bar" class="bar"></div>
+			</div>
+			<p id="pText" class="muted" style="margin:.5rem 0 0;">Initialisiere …</p>
+			<p id="pCurr" style="margin:.2rem 0 0;"></p>
+		</div>
 
-    <div id="resultCard" class="card" style="display:none;">
-      <h3>Ergebnis</h3>
-      <div id="links"></div>
-      <details>
-        <summary>Nicht gefunden</summary>
-        <ul id="misses"></ul>
-      </details>
-      <details>
-        <summary>Benutzte Suchanfragen</summary>
-        <ul id="searches"></ul>
-      </details>
-      <p><a class="btn alt" href="/">Neue Konvertierung</a></p>
-    </div>
-  </main>
+		<div id="resultCard" class="card" style="display:none;">
+			<h3>Ergebnis</h3>
+			<div id="links"></div>
+			<details>
+				<summary>Nicht gefunden</summary>
+				<ul id="misses"></ul>
+			</details>
+			<details>
+				<summary>Benutzte Suchanfragen</summary>
+				<ul id="searches"></ul>
+			</details>
+			<p><a class="btn alt" href="/">Neue Konvertierung</a></p>
+		</div>
+	</main>
 
-  <script>
-    const SPOTIFY_CONNECTED = {{ sp_ok | tojson }};
-    let resultInitialized = false;
+	<script>
+		const SPOTIFY_CONNECTED = {{ sp_ok | tojson }};
+		let resultInitialized = false;
 
-    const form = document.getElementById('form');
-    const startBtn = document.getElementById('startBtn');
-    const progressCard = document.getElementById('progressCard');
-    const bar = document.getElementById('bar');
-    const pText = document.getElementById('pText');
-    const pCurr = document.getElementById('pCurr');
-    const resultCard = document.getElementById('resultCard');
-    const linksDiv = document.getElementById('links');
-    const missesUl = document.getElementById('misses');
-    const searchesUl = document.getElementById('searches');
+		const form = document.getElementById('form');
+		const startBtn = document.getElementById('startBtn');
+		const progressCard = document.getElementById('progressCard');
+		const bar = document.getElementById('bar');
+		const pText = document.getElementById('pText');
+		const pCurr = document.getElementById('pCurr');
+		const resultCard = document.getElementById('resultCard');
+		const linksDiv = document.getElementById('links');
+		const missesUl = document.getElementById('misses');
+		const searchesUl = document.getElementById('searches');
 
-    form?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (!SPOTIFY_CONNECTED) {
-        alert("Bitte zuerst mit Spotify verbinden.");
-        return;
-      }
-      startBtn.disabled = true;
+		form?.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			if (!SPOTIFY_CONNECTED) {
+				alert("Bitte zuerst mit Spotify verbinden.");
+				return;
+			}
+			startBtn.disabled = true;
 
-      const fd = new FormData(form);
-      const res = await fetch('/api/start_convert', {
-        method: 'POST',
-        body: fd
-      });
-      if (!res.ok) {
-        startBtn.disabled = false;
-        alert('Start fehlgeschlagen');
-        return;
-      }
-      const {job_id} = await res.json();
-      progressCard.style.display = 'block';
-      resultCard.style.display = 'none';
-      bar.style.width = '0%';
-      pText.textContent = 'Initialisiere …';
-      pCurr.textContent = '';
-      resultInitialized = false;
-      linksDiv.innerHTML = '';
+			const fd = new FormData(form);
+			const res = await fetch('/api/start_convert', {
+				method: 'POST',
+				body: fd
+			});
+			if (!res.ok) {
+				startBtn.disabled = false;
+				alert('Start fehlgeschlagen');
+				return;
+			}
+			const { job_id } = await res.json();
+			progressCard.style.display = 'block';
+			resultCard.style.display = 'none';
+			bar.style.width = '0%';
+			pText.textContent = 'Initialisiere …';
+			pCurr.textContent = '';
+			resultInitialized = false;
+			linksDiv.innerHTML = '';
 
-      const es = new EventSource(`/api/stream/${job_id}`);
-      es.onmessage = (ev) => {
-        try {
-          const data = JSON.parse(ev.data);
-          bar.style.width = (data.percent || 0) + '%';
+			const es = new EventSource(`/api/stream/${job_id}`);
+			es.onmessage = (ev) => {
+				try {
+					const data = JSON.parse(ev.data);
+					bar.style.width = (data.percent || 0) + '%';
 
-          // ETA anzeigen (für Phase 1)
-          const baseText = (data.message || '') + `  (${data.done||0}/${data.total||0})`;
-          const etaText  = (data.eta_human != null && data.status !== 'done' && data.status !== 'error')
-            ? `  ·  ETA: ${data.eta_human}` : '';
-          pText.textContent = baseText + etaText;
+					// ETA anzeigen (für Phase 1)
+					const baseText = (data.message || '') + `  (${data.done || 0}/${data.total || 0})`;
+					const etaText = (data.eta_human != null && data.status !== 'done' && data.status !== 'error')
+						? `  ·  ETA: ${data.eta_human}` : '';
+					pText.textContent = baseText + etaText;
 
-          pCurr.textContent = data.current ? `Aktuell: ${data.current}` : '';
+					pCurr.textContent = data.current ? `Aktuell: ${data.current}` : '';
 
-          // Ergebnis initial rendern, sobald Links vorhanden sind (auch in status=resolving)
-          if (data.links && data.links.length && !resultInitialized) {
-            resultInitialized = true;
-            resultCard.style.display = 'block';
-            renderLinksSkeleton(data.links, data.playlist_links || []);
-            renderMisses(data.misses || []);
-            renderSearches(data.searches || []);
-          }
+					// Ergebnis initial rendern, sobald Links vorhanden sind (auch in status=resolving)
+					if (data.links && data.links.length && !resultInitialized) {
+						resultInitialized = true;
+						resultCard.style.display = 'block';
+						renderLinksSkeleton(data.links, data.playlist_links || []);
+						renderMisses(data.misses || []);
+						renderSearches(data.searches || []);
+					}
 
-          // Playlist-Links Live-Update (Phase 2)
-          if (resultInitialized && data.playlist_links) {
-            data.playlist_links.forEach((pl, i) => {
-              const wrap = document.getElementById(`plwrap-${i}`);
-              if (!wrap) return;
-              if (pl && !wrap.dataset.ready) {
-                wrap.dataset.ready = '1';
-                wrap.innerHTML = `<a class="btn alt" href="${pl}" target="_blank">YouTube-Playlist-Link</a>`;
-              }
-            });
-          }
+					// Playlist-Links Live-Update (Phase 2)
+					if (resultInitialized && data.playlist_links) {
+						data.playlist_links.forEach((pl, i) => {
+							const wrap = document.getElementById(`plwrap-${i}`);
+							if (!wrap) return;
+							if (pl && !wrap.dataset.ready) {
+								wrap.dataset.ready = '1';
+								wrap.innerHTML = `<a class="btn alt" href="${pl}" target="_blank">YouTube-Playlist-Link</a>`;
+							}
+						});
+					}
 
-          if (data.status === 'done') {
-            es.close();
-            startBtn.disabled = false;
-          } else if (data.status === 'error') {
-            es.close();
-            alert('Fehler: ' + (data.error || 'Unbekannt'));
-            startBtn.disabled = false;
-          }
-        } catch (_) {}
-      };
-      es.onerror = () => {};
-    });
+					if (data.status === 'done') {
+						es.close();
+						startBtn.disabled = false;
+					} else if (data.status === 'error') {
+						es.close();
+						alert('Fehler: ' + (data.error || 'Unbekannt'));
+						startBtn.disabled = false;
+					}
+				} catch (_) { }
+			};
+			es.onerror = () => { };
+		});
 
-    function renderLinksSkeleton(watchLinks, playlistLinks) {
-      linksDiv.innerHTML = '';
-      watchLinks.forEach((l, i) => {
-        const p = document.createElement('div');
-        p.className = 'card';
-        p.style.padding = '.75rem';
-        p.innerHTML = `
+		function renderLinksSkeleton(watchLinks, playlistLinks) {
+			linksDiv.innerHTML = '';
+			watchLinks.forEach((l, i) => {
+				const p = document.createElement('div');
+				p.className = 'card';
+				p.style.padding = '.75rem';
+				p.innerHTML = `
           <p style="margin:.25rem 0;">
-            <a class="btn alt" target="_blank" href="${l}">watch_videos Link ${i+1}/${watchLinks.length}</a>
+            <a class="btn alt" target="_blank" href="${l}">watch_videos Link ${i + 1}/${watchLinks.length}</a>
             <small class="muted"> &nbsp; (öffnen → „Speichern“ → „Neue Playlist“)</small>
           </p>
           <div id="plwrap-${i}" class="pl-wrap" ${playlistLinks[i] ? 'data-ready="1"' : ''}>
               ${playlistLinks[i]
-                  ? `<a class="btn alt" href="${playlistLinks[i]}" target="_blank">YouTube-Playlist-Link</a>`
-                      : `<span class="throb"></span><em class="muted"> Playlist-Link wird erzeugt …</em>`}
+						? `<a class="btn alt" href="${playlistLinks[i]}" target="_blank">YouTube-Playlist-Link</a>`
+						: `<span class="throb"></span><em class="muted"> Playlist-Link wird erzeugt …</em>`}
                       </div>
         `;
-        linksDiv.appendChild(p);
-      });
-    }
+				linksDiv.appendChild(p);
+			});
+		}
 
-    function renderMisses(misses) {
-      missesUl.innerHTML = '';
-      if (!misses.length) { missesUl.innerHTML = '<li>–</li>'; return; }
-      misses.forEach(m => {
-        const li = document.createElement('li');
-        li.textContent = m;
-        missesUl.appendChild(li);
-      });
-    }
+		function renderMisses(misses) {
+			missesUl.innerHTML = '';
+			if (!misses.length) { missesUl.innerHTML = '<li>–</li>'; return; }
+			misses.forEach(m => {
+				const li = document.createElement('li');
+				li.textContent = m;
+				missesUl.appendChild(li);
+			});
+		}
 
-    function renderSearches(searches) {
-      searchesUl.innerHTML = '';
-      searches.forEach(q => {
-        const li = document.createElement('li');
-        li.innerHTML = '<code>' + q.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</code>';
-        searchesUl.appendChild(li);
-      });
-    }
-  </script>
+		function renderSearches(searches) {
+			searchesUl.innerHTML = '';
+			searches.forEach(q => {
+				const li = document.createElement('li');
+				li.innerHTML = '<code>' + q.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</code>';
+				searchesUl.appendChild(li);
+			});
+		}
+	</script>
 </body>
+
 </html>

@@ -2,6 +2,8 @@ import os
 import re
 import time
 import json
+import random
+import hashlib
 import uuid
 import threading
 from typing import Dict, List, Optional, Tuple
@@ -239,7 +241,7 @@ def _resolve_links_worker(uid: str, job_id: str):
 # -------------------------
 # Background Worker
 # -------------------------
-def _run_conversion(uid: str, job_id: str, playlist_input: str, suffix: str, token_info: Dict):
+def _run_conversion(uid: str, job_id: str, playlist_input: str, suffix: str, token_info: Dict, shuffle_enabled: bool):
     try:
         _job_update(uid, job_id, status="running", message="Verbinde mit Spotify …", started_at=time.time())
         sp = _spotify_client_from_token(token_info)
@@ -249,8 +251,16 @@ def _run_conversion(uid: str, job_id: str, playlist_input: str, suffix: str, tok
 
         playlist_id = extract_spotify_playlist_id(playlist_input)
         tracks = fetch_spotify_tracks(sp, playlist_id)
+
+        # ✅ Shuffle direkt NACH Spotify
+        if shuffle_enabled and len(tracks) > 1:
+            # stabil pro Job (nice zum Debuggen). Wenn du jedes Mal random willst: seed = time.time_ns()
+            seed = int(hashlib.sha256(job_id.encode("utf-8")).hexdigest()[:8], 16)
+            rng = random.Random(seed)
+            rng.shuffle(tracks)
+
         total = len(tracks)
-        _job_update(uid, job_id, total=total, done=0, message=f"{total} Tracks gefunden.")
+        _job_update(uid, job_id, total=total, done=0, message=f"{total} Tracks gefunden." + (" (Shuffle ✅)" if shuffle_enabled else ""))
 
         video_ids: List[str] = []
         misses: List[str] = []
@@ -343,7 +353,11 @@ def api_start_convert():
         return ("Spotify nicht verbunden.", 401)
 
     playlist_input = request.form.get("spotify_playlist", "").strip()
-    suffix = (request.form.get("search_suffix", "Music Video") or "Music Video").strip()
+    suffix = (request.form.get("search_suffix", "Official Music Video HD") or "Official Music Video HD").strip()
+
+    # ✅ Checkbox (wenn aus: fehlt komplett)
+    shuffle_enabled = request.form.get("shuffle") in ("1", "on", "true", "yes")
+
     if not playlist_input:
         return ("Fehlende Eingaben.", 400)
 
@@ -352,7 +366,7 @@ def api_start_convert():
 
     t = threading.Thread(
         target=_run_conversion,
-        args=(uid, job_id, playlist_input, suffix, dict(token_info)),
+        args=(uid, job_id, playlist_input, suffix, dict(token_info), shuffle_enabled),
         daemon=True
     )
     t.start()
